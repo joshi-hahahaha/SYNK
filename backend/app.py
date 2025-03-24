@@ -18,9 +18,15 @@ CORS(app)
 MONGO_URI = os.getenv("MONGO_URI")
 
 client = MongoClient(MONGO_URI)
-generate_secret_key()
-load_dotenv()
-SECRET_KEY = os.getenv('SECRET_KEY')
+try:
+    client.admin.command('ping')
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+# generate_secret_key()
+# load_dotenv()
+# SECRET_KEY = os.getenv('SECRET_KEY')
 
 db = client["synk-db"]
 
