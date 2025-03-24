@@ -3,10 +3,21 @@ from flask_cors import CORS
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
-from backend.routes.login import login as l
+from routes.login import login as l
 
+#-----------------------------------------------------------------------------#
+#-------------------------------- APP SET UP ---------------------------------#
+#-----------------------------------------------------------------------------#
 # Load environment variables
 load_dotenv()
+
+app = Flask(__name__)
+CORS(app)
+
+MONGO_URI = os.getenv("MONGO_URI")
+
+client = MongoClient(MONGO_URI)
+
 
 app = Flask(__name__)
 CORS(app)  # Allow frontend to communicate with backend
@@ -19,6 +30,9 @@ db = client.get_database()
 users = db["users"]
 events = db["events"]
 
+#-----------------------------------------------------------------------------#
+#-------------------------------- AUTH ROUTES --------------------------------#
+#-----------------------------------------------------------------------------#
 @app.route("/api/hello", methods=["GET"])
 def hello():
     return jsonify({"message": "Hello from Flask!"})
