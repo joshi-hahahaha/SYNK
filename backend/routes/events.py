@@ -67,15 +67,16 @@ def nearby_events(events):
                     }), 200
 
 
+# Taken from Stack Overflow
 def haversine(lat1, lon1, lat2, lon2):
     # distance between latitudes
     # and longitudes
-    dLat = (lat2 - lat1) * math.pi / 180.0
-    dLon = (lon2 - lon1) * math.pi / 180.0
+    dLat = math.radians(lat2 - lat1)
+    dLon = math.radians(lon2 - lon1)
 
     # convert to radians
-    lat1 = (lat1) * math.pi / 180.0
-    lat2 = (lat2) * math.pi / 180.0
+    lat1 = math.radians(lat1)
+    lat2 = math.radians(lat2)
 
     # apply formulae
     a = (pow(math.sin(dLat / 2), 2) +
