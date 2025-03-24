@@ -27,5 +27,11 @@ def hello():
 def login():
     return l(users)
 
+@app.route("/auth/register", methods=["POST"])
+def register():
+    return register(users)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

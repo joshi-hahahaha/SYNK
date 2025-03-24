@@ -16,6 +16,7 @@ type User = {
   username: string,
   email: string,
   password: hashed_password(string),
+  reconfirmedpassword: 
   events: array<Event>,
 }
 
