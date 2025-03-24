@@ -41,13 +41,9 @@ def add_event(events):
                     }), 200
 
 def nearby_events(events):
-    # This is going to be very inefficient
-    # Linear search of every event
     data = request.json
     longitude = data["longitude"]
     latitude = data["latitude"]
-
-    # Haversine formula
 
     nearby = events.aggregate([
         {
@@ -61,7 +57,6 @@ def nearby_events(events):
     ])
 
     # Nearby is a list of objects we can then return in json
-
     return jsonify({
                     "data": nearby
                     }), 200
