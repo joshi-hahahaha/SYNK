@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 import hashlib
 import re
-import jwt
+import math
 import datetime
 
 def add_event(events):
@@ -44,10 +44,43 @@ def nearby_events(events):
     # This is going to be very inefficient
     # Linear search of every event
     data = request.json
+    longitude = data["longitude"]
+    latitude = data["latitude"]
 
-    # extract all events
-    # calculate distance to user
-    # if under threshold radius add to a list
-    # send the list back
+    # Haversine formula
 
-    return
+    nearby = events.aggregate([
+        {
+            "$geoNear": {
+                "near": { "type": "Point", "coordinates": [longitude, latitude] },
+                "distanceField": "dist.calculated",  # Field to store the calculated distance
+                "maxDistance": 5000,  # Maximum distance (in meters, 5km)
+                "spherical": True  # Use spherical geometry (Haversine formula)
+            }
+        }
+    ])
+
+    # Nearby is a list of objects we can then return in json
+
+    return jsonify({
+                    "data": nearby
+                    }), 200
+
+
+def haversine(lat1, lon1, lat2, lon2):
+    # distance between latitudes
+    # and longitudes
+    dLat = (lat2 - lat1) * math.pi / 180.0
+    dLon = (lon2 - lon1) * math.pi / 180.0
+
+    # convert to radians
+    lat1 = (lat1) * math.pi / 180.0
+    lat2 = (lat2) * math.pi / 180.0
+
+    # apply formulae
+    a = (pow(math.sin(dLat / 2), 2) +
+         pow(math.sin(dLon / 2), 2) *
+             math.cos(lat1) * math.cos(lat2));
+    rad = 6371
+    c = 2 * math.asin(math.sqrt(a))
+    return rad * c
