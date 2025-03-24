@@ -35,11 +35,11 @@ for user in users:
 #-----------------------------------------------------------------------------#
 @app.route("/auth/login", methods=["GET"])
 def login():
-    return a.login(users)
+    return auth.login(users)
 
 @app.route("/auth/register", methods=["POST"])
 def register():
-    return a.register(users)
+    return auth.register(users)
 
 
 

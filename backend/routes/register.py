@@ -1,8 +1,4 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS
-from pymongo import MongoClient
-import os
-from dotenv import load_dotenv
 import re
 from email_validator import validate_email, EmailNotValidError
 import hashlib
