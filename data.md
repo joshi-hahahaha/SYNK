@@ -10,6 +10,7 @@ db: {
 // TYPES
 type User = {
   id: string,
+  photo:? string,
   username: string,
   email: string,
   password: hashed_password(string),
@@ -19,6 +20,7 @@ type User = {
 type Event = {
   id: string,
   name: string,
+  photo:? string,
   description: string,
   host: User.id,
   longitude: float,
