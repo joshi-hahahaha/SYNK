@@ -60,23 +60,3 @@ def nearby_events(events):
     return jsonify({
                     "data": nearby
                     }), 200
-
-
-# Taken from Stack Overflow
-def haversine(lat1, lon1, lat2, lon2):
-    # distance between latitudes
-    # and longitudes
-    dLat = math.radians(lat2 - lat1)
-    dLon = math.radians(lon2 - lon1)
-
-    # convert to radians
-    lat1 = math.radians(lat1)
-    lat2 = math.radians(lat2)
-
-    # apply formulae
-    a = (pow(math.sin(dLat / 2), 2) +
-         pow(math.sin(dLon / 2), 2) *
-             math.cos(lat1) * math.cos(lat2));
-    rad = 6371
-    c = 2 * math.asin(math.sqrt(a))
-    return rad * c
