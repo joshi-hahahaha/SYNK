@@ -3,7 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
-from routes.login import login as l
+import routes.auth as auth
 
 #-----------------------------------------------------------------------------#
 #-------------------------------- APP SET UP ---------------------------------#
@@ -35,11 +35,11 @@ for user in users:
 #-----------------------------------------------------------------------------#
 @app.route("/auth/login", methods=["GET"])
 def login():
-    return l(users)
+    return a.login(users)
 
 @app.route("/auth/register", methods=["POST"])
 def register():
-    return register(users)
+    return a.register(users)
 
 
 
