@@ -4,7 +4,6 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from routes.login import login as l
-from helpers import generate_secret_key
 
 #-----------------------------------------------------------------------------#
 #-------------------------------- APP SET UP ---------------------------------#
@@ -18,20 +17,18 @@ CORS(app)
 MONGO_URI = os.getenv("MONGO_URI")
 
 client = MongoClient(MONGO_URI)
-try:
-    client.admin.command('ping')
-    print("Pinged your deployment. You successfully connected to MongoDB!")
-except Exception as e:
-    print(e)
-
-# generate_secret_key()
-# load_dotenv()
-# SECRET_KEY = os.getenv('SECRET_KEY')
 
 db = client["synk-db"]
 
-users = db["users"]
-events = db["events"]
+users_collection = db["users"]
+events_collection = db["events"]
+
+print("DEBUG")
+users = users_collection.find()
+print("Users in the 'users' collection:")
+for user in users:
+    print(user)
+
 
 #-----------------------------------------------------------------------------#
 #-------------------------------- AUTH ROUTES --------------------------------#
