@@ -12,19 +12,33 @@ def add_event(events):
     data = request.json
 
     # EXTRACT LOCATION INFORMATION
-    # EXTRACT TIME INFORMATION
-    # WHATEVER OTHER INFROMAT
+    id = data["id"]
+    name = data["name"]
+    description = data["description"]
+    host = data["host"]
+    longitude = data["longitude"]
+    latitude = data["latitude"]
+    isPublic = data["isPublic"]
+    startTime = data["startTime"]
+    endTime = data["endTime"]
 
     # ERROR CHECKING MAYBE
 
-    # event_id = events.insert_one({
-    #     .
-    #     .
-    #     .
-    #     .
-    #     .
-    # })
-    return jsonify({"message" : "event registered" }), 200
+    event_id = events.insert_one({
+        "id" : id,
+        "name" : name,
+        "description" : description,
+        "host" : host,
+        "longitude" : longitude,
+        "latitude" : latitude,
+        "isPublic" : isPublic,
+        "startTime" : startTime,
+        "endTime" : endTime,
+    })
+    return jsonify({
+                    "message" : "event registered",
+                    "eventId" : event_id
+                    }), 200
 
 def nearby_events(events):
     # This is going to be very inefficient
