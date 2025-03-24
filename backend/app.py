@@ -3,8 +3,8 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
-from backend.routes.login import login as l
-from backend.helpers import generate_secret_key
+from routes.login import login as l
+from helpers import generate_secret_key
 
 #-----------------------------------------------------------------------------#
 #-------------------------------- APP SET UP ---------------------------------#
