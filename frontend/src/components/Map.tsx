@@ -1,18 +1,18 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup  } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {Icon} from "leaflet";
 import { EventObj } from "@/type";
 import { URL_BASE } from "@/constants";
 
-const RecenterMap = ({ center }: { center: [number, number] }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center);
-  }, [center, map]);
-  return null;
-};
+// const RecenterMap = ({ center }: { center: [number, number] }) => {
+//   const map = useMap();
+//   useEffect(() => {
+//     map.setView(center);
+//   }, [center, map]);
+//   return null;
+// };
 
 const markerUserIcon = new Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -33,30 +33,6 @@ const eventIcon = new Icon({
 const Map = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [events, setEvents] = useState<EventObj[]>([]);
-  // const events = [
-  //   {
-  //     id: 1,
-  //     ownerId: 1,
-  //     name: "Event 1",
-  //     latitude: -33.844738,
-  //     longitude: 151.212191,
-  //     description: "This is event 1",
-  //     isPublic: true,
-  //     start: "2021-09-01T10:00:00",
-  //     end: "2021-09-01T12:00:00"
-  //   },
-  //   {
-  //     id: 2,
-  //     ownerId: 2,
-  //     name: "Event 2",
-  //     latitude: -33.883756,
-  //     longitude: 151.182324,
-  //     description: "This is event 2",
-  //     isPublic: true,
-  //     start: "2021-09-01T10:00:00",
-  //     end: "2021-09-01T12:00:00"
-  //   }
-  // ]
 
   const successCallback = (position: GeolocationPosition) => {
     setUserLocation([position.coords.latitude, position.coords.longitude]);
@@ -99,7 +75,7 @@ const Map = () => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <RecenterMap center={userLocation} />
+          {/* <RecenterMap center={userLocation} /> */}
           <Marker position={userLocation} icon={markerUserIcon}>
             <Popup>{"You are here!"}</Popup>
           </Marker>
