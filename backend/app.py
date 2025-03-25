@@ -41,11 +41,11 @@ def logout():
 
 @app.route("/user/update", methods=["PUT"])
 def user_update():
-    return user.user_update(users, db)
+    return user.user_update(users_collection, db)
 
 @app.route("/user/details", methods=["GET"])
 def user_details():
-    return user.user_details(users, db)
+    return user.user_details(users_collection, db)
 
 @app.route("/events", methods=["POST"])
 def post_event():

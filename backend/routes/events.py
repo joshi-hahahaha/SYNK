@@ -22,8 +22,6 @@ def add_event(events):
     startTime = data["startTime"]
     endTime = data["endTime"]
 
-    # ERROR CHECKING MAYBE
-
     event_id = events.insert_one({
         "id" : id,
         "name" : name,
