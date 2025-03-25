@@ -1,76 +1,58 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import {Icon} from "leaflet";
 
-const userLocationIcon = new L.Icon({
-  iconUrl: "/location-crosshairs-solid.svg",
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
+const markerIcon = new Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  tooltipAnchor: [16, -28],
+})
 
-const LocationUpdater = ({
-  setUserLocation,
-}: {
-  setUserLocation: (loc: [number, number]) => void;
-}) => {
+const RecenterMap = ({ center }: { center: [number, number] }) => {
   const map = useMap();
-  const [position, setPosition] = useState<[number, number] | null>(null);
-
   useEffect(() => {
-    if (!navigator.geolocation) {
-      console.error("Geolocation is not supported by this browser.");
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        setPosition([latitude, longitude]);
-        setUserLocation([latitude, longitude]);
-        map.setView([latitude, longitude], 13);
-      },
-      (error) => {
-        console.error("Error getting location:", error);
-      }
-    );
-  }, [map, setUserLocation]);
-
-  return position ? (
-    <Marker position={position} icon={userLocationIcon}>
-      <Popup>You are here</Popup>
-    </Marker>
-  ) : null;
+    map.setView(center);
+  }, [center, map]);
+  return null;
 };
 
 const Map = () => {
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(
-    null
-  );
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
-  const defaultCenter: [number, number] = [33.8708, 151.2073];
+  const successCallback = (position: GeolocationPosition) => {
+    setUserLocation([position.coords.latitude, position.coords.longitude]);
+  };
+
+  useEffect(() => {
+    const watchId = navigator.geolocation.watchPosition(successCallback, null, {
+      enableHighAccuracy: true,
+      timeout: 1000 * 60,
+      maximumAge: 0,
+    });
+
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
 
   return (
     <div className="h-screen w-screen">
-      <MapContainer
-        center={userLocation || defaultCenter}
-        zoom={13}
-        className="h-full w-full"
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <LocationUpdater setUserLocation={setUserLocation} />
-        {userLocation && (
-          <Marker position={userLocation} icon={userLocationIcon}>
-            <Popup>You are here!</Popup>
+      {userLocation ? (
+        <MapContainer center={userLocation} zoom={13} className="h-full w-full">
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <RecenterMap center={userLocation} />
+          <Marker position={userLocation} icon={markerIcon}>
+            <Popup>{"You are here!"}</Popup>
           </Marker>
-        )}
-      </MapContainer>
+        </MapContainer>
+      ) : (
+        <p className="text-center mt-10">Fetching location...</p>
+      )}
     </div>
   );
 };
