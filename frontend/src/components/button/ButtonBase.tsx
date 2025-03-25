@@ -1,5 +1,6 @@
 import React, { JSX } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "@/context/LocationContext";
 
 type ButtonBaseProps = {
   index: number;
@@ -14,13 +15,20 @@ type Btn = {
 };
 
 const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
+  const { userLocation, map } = useLocation();
+
   const handleClick = () => {
     if (btn.type === "search") {
       (
         document.getElementById("search_modal") as HTMLDialogElement | null
       )?.showModal();
-    } else if (btn.type === "refresh") {
-      console.log(btn.type);
+    } else if (btn.type === "recentre") {
+      console.log(userLocation);
+      console.log(map);
+      if (userLocation && map) {
+        console.log("recentre");
+        map.flyTo(userLocation, 13); // Use the stored Leaflet map instance
+      }
     } else if (btn.type === "settings") {
       (
         document.getElementById("settings_modal") as HTMLDialogElement | null
