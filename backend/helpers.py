@@ -42,7 +42,6 @@ def generate_secret_key():
             if 'SECRET_KEY' not in open('.env').read():
                 f.write(f'\nSECRET_KEY={secret_key}\n')
                 
-# verify JWT token
 def verify_token(token, secret_key):
     try:
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])

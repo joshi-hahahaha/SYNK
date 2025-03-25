@@ -1,3 +1,4 @@
+import { URL_BASE } from "@/constants";
 import { useAuth } from "@/context/AuthContext";
 import React from "react";
 
@@ -25,11 +26,36 @@ const SettingsModal = () => {
     openRegisterModal();
   };
 
-  const handleLogout = () => {
-    logout();
-    (
-      document.getElementById("settings_modal") as HTMLDialogElement | null
-    )?.close();
+  const handleLogout = async () => {
+    const token = localStorage.getItem("token");
+    console.log(token);
+    if (!token) {
+      logout(); // Clear client state if no token exists
+      return;
+    }
+
+    try {
+      const response = await fetch(`${URL_BASE}/auth/logout`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Logout failed");
+      }
+
+      // Success case
+      const data = await response.json();
+      console.log(data.message);
+      logout();
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Optional: Show error to user
+    }
   };
 
   return (
