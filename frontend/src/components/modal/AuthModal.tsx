@@ -24,7 +24,7 @@ function AuthModal() {
     e.preventDefault();
     console.log("Form submitted:", data);
 
-    const endpoint = isLogin ? "/login" : "/register";
+    const endpoint = isLogin ? "/auth/login" : "/auth/register";
     const url = `https://synk-e81v.onrender.com${endpoint}`;
 
     const body = isLogin
