@@ -12,7 +12,7 @@ from routes import auth, user, events
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000", "https://synk-seven.vercel.app"])
+CORS(app, origins=["https://synk-seven.vercel.app", "http://localhost:3000"])
 
 MONGO_URI = os.getenv("MONGO_URI")
 
