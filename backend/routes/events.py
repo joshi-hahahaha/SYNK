@@ -55,7 +55,7 @@ def nearby_events(events, latitude, longitude):
                     "type": "Point",
                     "coordinates": [longitude, latitude]
                 },
-                "$maxDistance": 60000  # Max distance in meters
+                "$maxDistance": 30000  # Max distance in meters
             }
         }
     })
