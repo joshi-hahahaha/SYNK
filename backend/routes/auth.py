@@ -8,7 +8,7 @@ import re
 import jwt
 import datetime
 
-from backend.helpers import hash_password
+from helpers import hash_password
 
 def login(users):
     data = request.json
