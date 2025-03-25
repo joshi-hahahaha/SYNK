@@ -108,5 +108,6 @@ def logout():
         return jsonify({"message": "Token is missing"}), 400
     
     token_blacklist.add(token)
-    return jsonify({"message: Successfully logged out"}), 200    
+    
+    return jsonify({"message: Successfully logged out"}), 200   
 

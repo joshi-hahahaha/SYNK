@@ -50,6 +50,9 @@ def logout():
 def user_update():
     return user.user_update(users, db)
 
+@app.route("/user/details", methods=["GET"])
+def user_details():
+    return user.user_details(users, db)
 
 @app.route("/events", methods=["POST"])
 def post_event():
