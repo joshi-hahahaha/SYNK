@@ -2,6 +2,9 @@
 
 import ButtonMenu from "@/components/button/ButtonMenu";
 import Header from "@/components/header/Header";
+import EventsModal from "@/components/modal/EventsModal";
+import SearchModal from "@/components/modal/SearchModal";
+import SettingsModal from "@/components/modal/SettingsModal";
 
 import dynamic from "next/dynamic";
 
@@ -15,6 +18,9 @@ export default function Home() {
       <Header />
       <Map />
       <ButtonMenu />
+      <SettingsModal />
+      <EventsModal />
+      <SearchModal />
     </div>
   );
 }

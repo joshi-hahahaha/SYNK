@@ -15,7 +15,15 @@ type Btn = {
 
 const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
   const handleClick = () => {
-    console.log(btn.type);
+    if (btn.type === "search") {
+      document.getElementById("search_modal").showModal();
+    } else if (btn.type === "refresh") {
+      console.log(btn.type);
+    } else if (btn.type === "settings") {
+      document.getElementById("settings_modal").showModal();
+    } else if (btn.type === "events") {
+      document.getElementById("events_modal").showModal();
+    }
   };
 
   return (
