@@ -12,7 +12,7 @@ from routes import auth, user, events
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://synk-seven.vercel.app", "http://localhost:3000"])
 
 MONGO_URI = os.getenv("MONGO_URI")
 
@@ -40,7 +40,7 @@ def login():
 
 @app.route("/auth/register", methods=["POST"])
 def register():
-    return auth.register(users)
+    return auth.register(db)
 
 @app.route("/auth/logout", methods=["DELETE"])
 def logout():

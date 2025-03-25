@@ -20,12 +20,42 @@ function AuthModal() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", data);
 
-    if (isLogin) {
-    } else {
+    const endpoint = isLogin ? "/login" : "/register";
+    const url = `https://synk-e81v.onrender.com${endpoint}`;
+
+    const body = isLogin
+      ? { email: data.email, password: data.password }
+      : {
+          username: data.username,
+          email: data.email,
+          password: data.password,
+        };
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Success:", result);
+        // You can add success handling like redirecting or closing the modal
+      } else {
+        console.error("Error:", result);
+        // Handle errors (e.g., display error message)
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      // Handle network errors (e.g., show error message to the user)
     }
   };
 
