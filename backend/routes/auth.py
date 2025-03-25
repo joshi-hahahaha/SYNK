@@ -31,6 +31,10 @@ def login(db, secret_key):
     if not valid_password:
         return jsonify({"error": "invalid email or password"}), 401
 
+    # is_confirmed = valid_user.get("is_confirmed")
+    # if not is_confirmed:
+    #     return jsonify({"error": "account has not yet been confirmed"}), 403
+
     token = create_token(str(valid_user.get("_id")), secret_key)
     
     print(token)
