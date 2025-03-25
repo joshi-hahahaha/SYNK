@@ -1,111 +1,100 @@
 "use client";
-import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useEffect, useRef, useState } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import {Icon} from "leaflet";
+import { Icon } from "leaflet";
 import { EventObj } from "@/type";
-
-const RecenterMap = ({ center }: { center: [number, number] }) => {
-  const map = useMap();
-  useEffect(() => {
-    map.setView(center);
-  }, [center, map]);
-  return null;
-};
+import { URL_BASE } from "@/constants";
+import { useLocation } from "@/context/LocationContext";
 
 const markerUserIcon = new Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   tooltipAnchor: [16, -28],
-})
+});
 
 const eventIcon = new Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  iconUrl:
+    "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   tooltipAnchor: [16, -28],
-})
+});
 
 const Map = () => {
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [events, setEvents] = useState<EventObj[]>([]);
-  // const events = [
-  //   {
-  //     id: 1,
-  //     ownerId: 1,
-  //     name: "Event 1",
-  //     latitude: -33.844738,
-  //     longitude: 151.212191,
-  //     description: "This is event 1",
-  //     isPublic: true,
-  //     start: "2021-09-01T10:00:00",
-  //     end: "2021-09-01T12:00:00"
-  //   },
-  //   {
-  //     id: 2,
-  //     ownerId: 2,
-  //     name: "Event 2",
-  //     latitude: -33.883756,
-  //     longitude: 151.182324,
-  //     description: "This is event 2",
-  //     isPublic: true,
-  //     start: "2021-09-01T10:00:00",
-  //     end: "2021-09-01T12:00:00"
-  //   }
-  // ]
+  // Utilises a Context - a cool thing in React that lets
+  // you store "global" variables, states, functions, etc.
 
-  const successCallback = (position: GeolocationPosition) => {
-    setUserLocation([position.coords.latitude, position.coords.longitude]);
-  };
+  // useLocation is the Context, and userLocation and setMap
+  // is a state and function defined in useLocation
+
+  // can look at the imports, but useLocation is from
+  // LocationContext.tsx (take a read of it)
+  const { userLocation, setMap } = useLocation();
+  const mapRef = useRef(null);
 
   useEffect(() => {
-    const watchId = navigator.geolocation.watchPosition(successCallback, null, {
-      enableHighAccuracy: true,
-      maximumAge: 0,
-    });
-    return () => navigator.geolocation.clearWatch(watchId);
-  }, []);
-
-  useEffect(() => {
-    const getData = async () => {
-      const latitude = userLocation ? userLocation[0] : 0
-      const longitude = userLocation ? userLocation[1] : 0
-      const response = await fetch(`http://localhost:5000/events?latitude=${latitude}&longitude=${longitude}`)
-      if (!response.ok) {
-        console.log("error")
-        return
-      } else {
-        console.log(response)
-      }
-      const json = await response.json()
-      for (const event of json) {
-        setEvents([...events, event])
-      }
+    if (mapRef.current) {
+      setMap(mapRef.current); // Store the map instance in context
     }
-    getData()
-  }, [events, userLocation])
+  }, [mapRef, setMap]);
+  const [events, setEvents] = useState<EventObj[]>([]);
+
+  useEffect(() => {
+    if (!userLocation) return;
+
+    const getData = async () => {
+      try {
+        const response = await fetch(
+          `${URL_BASE}/events?latitude=${userLocation[0]}&longitude=${userLocation[1]}`
+        );
+        if (!response.ok) {
+          console.log("error");
+          return;
+        }
+        const json = await response.json();
+        setEvents(json);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getData();
+  }, [userLocation]);
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen relative">
       {userLocation ? (
-        <MapContainer center={userLocation} zoom={13} className="h-full w-full">
+        <MapContainer
+          center={userLocation}
+          zoom={13}
+          className="h-full w-full"
+          ref={mapRef}
+        >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          <RecenterMap center={userLocation} />
           <Marker position={userLocation} icon={markerUserIcon}>
             <Popup>{"You are here!"}</Popup>
           </Marker>
           {events.map((event) => (
-            <Marker key={event.id} position={[event.latitude, event.longitude]} icon={eventIcon}>
+            <Marker
+              key={event.id}
+              position={[event.latitude, event.longitude]}
+              icon={eventIcon}
+            >
               <Popup>
-                <h2><b>{event.name}</b></h2>
+                <h2>
+                  <b>{event.name}</b>
+                </h2>
                 <p>{event.description}</p>
-                <i>{event.isPublic ? "Open" : "Closed"}</i></Popup>
+                <i>{event.isPublic ? "Open" : "Closed"}</i>
+              </Popup>
             </Marker>
           ))}
         </MapContainer>

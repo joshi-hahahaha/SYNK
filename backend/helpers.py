@@ -1,8 +1,11 @@
 import os
+import re
 import secrets
 import bcrypt
-import jwt
 import datetime
+
+from flask import jsonify
+import jwt
 
 # Hash a password
 def hash_password(password):
@@ -39,7 +42,6 @@ def generate_secret_key():
             if 'SECRET_KEY' not in open('.env').read():
                 f.write(f'\nSECRET_KEY={secret_key}\n')
                 
-# verify JWT token
 def verify_token(token, secret_key):
     try:
         payload = jwt.decode(token, secret_key, algorithms=["HS256"])
@@ -48,3 +50,18 @@ def verify_token(token, secret_key):
         return None # token has expired
     except jwt.InvalidTokenError:
         return None # invalid token
+
+# check register data
+def check_register_data(db, email, username, password):
+    invalid_character = re.compile(r"^.*[a-zA-Z0-9]")
+
+    if not username or not password:
+        return jsonify({"message": "All fields are required"}), 400
+
+    match = invalid_character.match(username)
+    if not match:
+        return jsonify({"message": "username uses inappropriate characters"}), 400
+
+    existing_email = db.users.find_one({"email": email})
+    if existing_email:
+        return jsonify({"message": "Email already exists! Please provide another email"}), 400

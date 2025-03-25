@@ -2,7 +2,7 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { FaCalendar, FaSearch, FaSpinner, FaCog } from "react-icons/fa";
+import { FaCalendar, FaSearch, FaCog, FaSourcetree } from "react-icons/fa";
 import MenuButton from "./MenuButton";
 import ButtonBase from "./ButtonBase";
 
@@ -12,10 +12,10 @@ export default function ButtonMenu() {
   const menuItems = [
     { icon: <FaSearch />, color: "bg-yellow-400", angle: 0, type: "search" },
     {
-      icon: <FaSpinner />,
+      icon: <FaSourcetree />,
       color: "bg-green-400",
       angle: -60,
-      type: "refresh",
+      type: "recentre",
     },
     {
       icon: <FaCalendar />,

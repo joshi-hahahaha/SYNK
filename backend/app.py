@@ -26,18 +26,11 @@ db = client["synk-db"]
 
 users_collection = db["users"]
 events_collection = db["events"]
+blacklist = db["blacklist"]
+
 events_collection.create_index([("location", "2dsphere")])
 
 SECRET_KEY = os.getenv('SECRET_KEY')
-
-blacklist = db.blacklist
-
-print("DEBUG")
-users = users_collection.find()
-print("Users in the 'users' collection:")
-for user in users:
-    print(user)
-
 
 #-----------------------------------------------------------------------------#
 #-------------------------------- AUTH ROUTES --------------------------------#
@@ -52,7 +45,7 @@ def register():
 
 @app.route("/auth/logout", methods=["DELETE"])
 def logout():
-    return auth.logout()
+    return auth.logout(db)
 
 @app.route("/user/update", methods=["PUT"])
 def user_update():

@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { AuthData } from "@/type";
+import { AuthData, AuthRes } from "@/type";
+// import { LOCAL_URL_BASE } from "@/constants";
 import { URL_BASE } from "@/constants";
+import { AuthError } from "../error/AuthError";
 
 function AuthModal() {
-  const { isLogin, toggleIsLogin } = useAuth();
+  const { isLogin, toggleIsLogin, login } = useAuth();
+  const [error, setError] = useState<string | null>(null);
 
   const [data, setData] = useState<AuthData>({
     email: "",
@@ -23,11 +26,16 @@ function AuthModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!isLogin && data.password !== data.confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
 
     const endpoint = isLogin ? "/auth/login" : "/auth/register";
     const url = `${URL_BASE}${endpoint}`;
-
-    console.log(`HERE ${isLogin}`);
+    // const url = `${LOCAL_URL_BASE}${endpoint}`;
 
     const body = isLogin
       ? { email: data.email, password: data.password }
@@ -36,8 +44,6 @@ function AuthModal() {
           email: data.email,
           password: data.password,
         };
-
-    console.log(body);
 
     try {
       const response = await fetch(url, {
@@ -48,21 +54,17 @@ function AuthModal() {
         body: JSON.stringify(body),
       });
 
-      const result = await response.json();
+      const result: AuthRes = await response.json();
+      console.log(result);
 
       if (response.ok) {
-        console.log("Success:", result);
-        (
-          document.getElementById("auth_modal") as HTMLDialogElement | null
-        )?.close();
-        // You can add success handling like redirecting or closing the modal
+        login(result.token, result.userId);
       } else {
-        console.error("Error:", result);
-        // Handle errors (e.g., display error message)
+        setError(result.message || "An error occurred");
       }
     } catch (error) {
+      setError("Network error - please try again");
       console.error("Network error:", error);
-      // Handle network errors (e.g., show error message to the user)
     }
   };
 
@@ -141,6 +143,7 @@ function AuthModal() {
               />
             </div>
           )}
+          <AuthError error={error} onClose={() => setError(null)} />
           <p className="py-1">
             {isLogin ? (
               <>
