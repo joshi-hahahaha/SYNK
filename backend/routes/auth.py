@@ -8,7 +8,7 @@ import re
 import jwt
 import datetime
 
-from helpers import create_token, hash_password, verify_password, verify_token
+from helpers import check_register_data, create_token, hash_password, verify_password, verify_token
 
 def login(db, secret_key):
     data = request.json
@@ -31,14 +31,8 @@ def login(db, secret_key):
     if not valid_password:
         return jsonify({"error": "invalid email or password"}), 401
 
-    # is_confirmed = valid_user.get("is_confirmed")
-    # if not is_confirmed:
-    #     return jsonify({"error": "account has not yet been confirmed"}), 403
 
     token = create_token(str(valid_user.get("_id")), secret_key)
-    
-    print(token)
-
     return jsonify({
         "user_id": str(valid_user.get('_id')),
         "token": token,
@@ -54,9 +48,10 @@ def register(db):
     email = data.get("email")
     username = data.get("username")
     password = data.get("password")
-
-    if not username or not email or not password:
-        return jsonify({"error": "missing required fields"}), 400
+    
+    err = check_register_data(db, email, username, password)
+    if err:
+        return err
 
     existing_user = db.users.find_one({"email": email})
     if existing_user:
