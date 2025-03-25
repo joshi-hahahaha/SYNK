@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuthenticated(true);
     setToken(newToken);
     setUserId(newUserId);
-    console.log(isAuthenticated);
     (
       document.getElementById("auth_modal") as HTMLDialogElement | null
     )?.close();
@@ -52,7 +51,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsAuthenticated(false);
     setToken(null);
     setUserId(null);
-    console.log(isAuthenticated);
     (
       document.getElementById("settings_modal") as HTMLDialogElement | null
     )?.close();
