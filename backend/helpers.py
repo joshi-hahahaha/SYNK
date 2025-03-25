@@ -1,8 +1,9 @@
 import os
 import secrets
 import bcrypt
-import jwt
 import datetime
+
+import jwt
 
 # Hash a password
 def hash_password(password):
