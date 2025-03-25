@@ -6,6 +6,7 @@ import { Icon } from "leaflet";
 import { EventObj } from "@/type";
 import { URL_BASE } from "@/constants";
 import { useLocation } from "@/context/LocationContext";
+import { EventPopup } from "@/components/EventPopup";
 
 const markerUserIcon = new Icon({
   iconUrl:
@@ -88,12 +89,8 @@ const Map = () => {
               position={[event.latitude, event.longitude]}
               icon={eventIcon}
             >
-              <Popup>
-                <h2>
-                  <b>{event.name}</b>
-                </h2>
-                <p>{event.description}</p>
-                <i>{event.isPublic ? "Open" : "Closed"}</i>
+              <Popup className="m-0 p-0">
+                <EventPopup {...event} />
               </Popup>
             </Marker>
           ))}
