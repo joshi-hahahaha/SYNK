@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@plugin "daisyui" {
+  themes: wireframe --default, business --prefersdark;
+}
 
 :root {
   --background: #ffffff;
