@@ -2,6 +2,7 @@
 
 import ButtonMenu from "@/components/button/ButtonMenu";
 import Header from "@/components/header/Header";
+import AuthModal from "@/components/modal/AuthModal";
 import EventsModal from "@/components/modal/EventsModal";
 import SearchModal from "@/components/modal/SearchModal";
 import SettingsModal from "@/components/modal/SettingsModal";
@@ -21,6 +22,7 @@ export default function Home() {
       <SettingsModal />
       <EventsModal />
       <SearchModal />
+      <AuthModal />
     </div>
   );
 }

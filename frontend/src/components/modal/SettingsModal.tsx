@@ -1,11 +1,40 @@
+import { useAuth } from "@/context/AuthContext";
 import React from "react";
 
 const SettingsModal = () => {
+  const { openLoginModal, openRegisterModal } = useAuth();
+
+  const handleLogin = () => {
+    console.log("login");
+    // Close settings modal
+    (
+      document.getElementById("settings_modal") as HTMLDialogElement | null
+    )?.close();
+    // Open auth modal
+    (
+      document.getElementById("auth_modal") as HTMLDialogElement | null
+    )?.showModal();
+    openLoginModal();
+  };
+
+  const handleRegister = () => {
+    console.log("register");
+    // Close settings modal
+    (
+      document.getElementById("settings_modal") as HTMLDialogElement | null
+    )?.close();
+    // Open auth modal
+    (
+      document.getElementById("auth_modal") as HTMLDialogElement | null
+    )?.showModal();
+    openRegisterModal();
+  };
+
   return (
     <dialog id="settings_modal" className="modal">
       <div className="modal-box bg-base text-base-content">
         <div className="flex justify-between items-center">
-          <h3 className="font-bold text-2xl">Settings</h3>
+          <h3 className="font-bold text-3xl">Settings</h3>
           <label className="swap swap-rotate">
             {/* this hidden checkbox controls the state */}
             <input
@@ -33,14 +62,20 @@ const SettingsModal = () => {
             </svg>
           </label>
         </div>
-        <div className="w-full flex py-2">
+        {/* <div className="w-full flex py-2">
           <p>Update User Profile Details</p>
-        </div>
-        <div className="w-full flex pb-2 justify-center space-x-2 items-center">
-          <button className="btn btn-lg w-[45%] bg-primary hover:opacity-70 text-white">
+        </div> */}
+        <div className="w-full flex py-2 justify-center space-x-2 items-center">
+          <button
+            onClick={handleLogin}
+            className="btn btn-lg w-[50%] bg-primary hover:opacity-70 text-white"
+          >
             Log In
           </button>
-          <button className="btn btn-lg w-[45%] bg-secondary hover:opacity-70 text-white">
+          <button
+            onClick={handleRegister}
+            className="btn btn-lg w-[50%] bg-secondary hover:opacity-70 text-white"
+          >
             Register
           </button>
         </div>
