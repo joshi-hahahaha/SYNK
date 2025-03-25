@@ -41,7 +41,7 @@ def login():
 
 @app.route("/auth/register", methods=["POST"])
 def register():
-    return auth.register(db)
+    return auth.register(db, SECRET_KEY)
 
 @app.route("/auth/logout", methods=["DELETE"])
 def logout():
