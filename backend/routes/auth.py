@@ -41,7 +41,6 @@ def login(db, secret_key):
         "user_id": str(valid_user.get('_id')),
         "token": token,
         "message": "user login successful",
-        "role": valid_user.get("role"),
     }), 200
 
 
