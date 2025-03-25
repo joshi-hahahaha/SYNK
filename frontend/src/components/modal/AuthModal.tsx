@@ -23,7 +23,10 @@ function AuthModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", data);
-    // Add your authentication logic here
+
+    if (isLogin) {
+    } else {
+    }
   };
 
   return (
@@ -37,14 +40,14 @@ function AuthModal() {
           {/* Username (only shown for register) */}
           {!isLogin && (
             <div className="form-control">
-              <label className="label">
+              <label className="label text-white">
                 <span className="label-text">Username</span>
               </label>
               <input
                 type="text"
                 name="username"
                 placeholder="Enter your username"
-                className="input input-bordered w-full"
+                className="input input-bordered w-full text-white"
                 value={data.username}
                 onChange={handleChange}
                 required={!isLogin}
@@ -54,7 +57,7 @@ function AuthModal() {
 
           {/* Email */}
           <div className="form-control">
-            <label className="label">
+            <label className="label text-white">
               <span className="label-text">Email</span>
             </label>
             <input
@@ -70,7 +73,7 @@ function AuthModal() {
 
           {/* Password */}
           <div className="form-control">
-            <label className="label">
+            <label className="label text-white">
               <span className="label-text">Password</span>
             </label>
             <input
@@ -87,7 +90,7 @@ function AuthModal() {
           {/* Confirm Password (only shown for register) */}
           {!isLogin && (
             <div className="form-control">
-              <label className="label">
+              <label className="label text-white">
                 <span className="label-text">Confirm Password</span>
               </label>
               <input
