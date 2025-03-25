@@ -10,20 +10,20 @@ export default function ButtonMenu() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    {
-      icon: <FaCalendar />,
-      color: "bg-yellow-400",
-      angle: 180,
-      type: "Events",
-    },
-    { icon: <FaSearch />, color: "bg-teal-400", angle: -120, type: "search" },
+    { icon: <FaSearch />, color: "bg-yellow-400", angle: 0, type: "search" },
     {
       icon: <FaSpinner />,
       color: "bg-green-400",
       angle: -60,
       type: "Refresh",
     },
-    { icon: <FaCog />, color: "bg-blue-400", angle: 0, type: "Settings" },
+    {
+      icon: <FaCalendar />,
+      color: "bg-teal-400",
+      angle: -120,
+      type: "Events",
+    },
+    { icon: <FaCog />, color: "bg-blue-400", angle: 180, type: "Settings" },
   ];
 
   return (
