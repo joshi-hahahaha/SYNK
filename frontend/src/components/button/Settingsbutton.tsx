@@ -1,7 +1,7 @@
 import React from "react";
 
-function Settingsbutton() {
-  return <div>Settingsbutton</div>;
+function SettingsButton() {
+  return <div>SettingsButton</div>;
 }
 
-export default Settingsbutton;
+export default SettingsButton;
