@@ -21,6 +21,7 @@
     "react-circular-menu": "^2.4.17",
     "react-dom": "^19.0.0",
     "react-leaflet": "^5.0.0",
+    "react-planet": "^1.0.1-ie11",
     "styled-components": "^6.1.16"
   },
   "devDependencies": {
