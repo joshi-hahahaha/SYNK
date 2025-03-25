@@ -27,6 +27,7 @@ def login(users):
         "token": None
     }), 200
 
+
 def register(users):
     data = request.json
     firstName = data.get("firstName")
@@ -98,3 +99,13 @@ def register(users):
         "message": "Successfully registered a profile",
         "token": token
     }), 201
+
+
+def logout():
+    token = request.headers.get("Authorization")
+    if not token:
+        return jsonify({"message": "Token is missing"}), 400
+    
+    token_blacklist.add(token)
+    return jsonify({"message: Successfully logged out"}), 200    
+
