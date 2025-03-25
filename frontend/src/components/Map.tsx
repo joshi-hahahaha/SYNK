@@ -21,17 +21,40 @@ const markerUserIcon = new Icon({
 })
 
 const eventIcon = new Icon({
-  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   tooltipAnchor: [16, -28],
 })
 
-
 const Map = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [events, setEvents] = useState<any[]>([]);
+  // const [events, setEvents] = useState(<Event[]>([])
+  const events = [
+    {
+      id: 1,
+      ownerId: 1,
+      name: "Event 1",
+      latitude: -33.844738,
+      longitude: 151.212191,
+      description: "This is event 1",
+      isPublic: true,
+      start: "2021-09-01T10:00:00",
+      end: "2021-09-01T12:00:00"
+    },
+    {
+      id: 2,
+      ownerId: 2,
+      name: "Event 2",
+      latitude: -33.883756,
+      longitude: 151.182324,
+      description: "This is event 2",
+      isPublic: true,
+      start: "2021-09-01T10:00:00",
+      end: "2021-09-01T12:00:00"
+    }
+  ]
 
   const successCallback = (position: GeolocationPosition) => {
     setUserLocation([position.coords.latitude, position.coords.longitude]);
@@ -40,26 +63,25 @@ const Map = () => {
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(successCallback, null, {
       enableHighAccuracy: true,
-      timeout: 1000 * 60,
       maximumAge: 0,
     });
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  useEffect(() => {
-    const getData = async () => {
-      const response = await fetch("URL")
-      if (!response.ok) {
-        console.log("error")
-        return
-      }
-      const json = await response.json()
-      for (const event of json) {
-        setEvents([...events, event])
-      }
-    }
-    getData()
-  }, [])
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     const response = await fetch("URL")
+  //     if (!response.ok) {
+  //       console.log("error")
+  //       return
+  //     }
+  //     const json = await response.json()
+  //     for (const event of json) {
+  //       setEvents([...events, event])
+  //     }
+  //   }
+  //   getData()
+  // }, [events])
 
   return (
     <div className="h-screen w-screen">
@@ -74,8 +96,11 @@ const Map = () => {
             <Popup>{"You are here!"}</Popup>
           </Marker>
           {events.map((event) => (
-            <Marker position={[event.lat, event.lon]} icon={eventIcon}>
-              <Popup>{event.name + "\n" + event.description}</Popup>
+            <Marker key={event.id} position={[event.latitude, event.longitude]} icon={eventIcon}>
+              <Popup>
+                <h2><b>{event.name}</b></h2>
+                <p>{event.description}</p>
+                <i>{event.isPublic ? "Open" : "Closed"}</i></Popup>
             </Marker>
           ))}
         </MapContainer>
