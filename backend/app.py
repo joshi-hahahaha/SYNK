@@ -40,7 +40,7 @@ def login():
 
 @app.route("/auth/register", methods=["POST"])
 def register():
-    return auth.register(users)
+    return auth.register(db)
 
 @app.route("/auth/logout", methods=["DELETE"])
 def logout():
