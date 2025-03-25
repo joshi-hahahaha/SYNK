@@ -39,7 +39,6 @@ def register(users):
 
     password = hashlib.sha256(password.encode()).hexdigest()
 
-
     invalid_character = re.compile(r"^.*[^a-zA-Z '-]")
 
     # Required fields are missing
@@ -73,6 +72,8 @@ def register(users):
     if existing_username:
         return jsonify({"message": "Username has been taken! Please enter a new username"}), 409
 
+
+    # email limitations
     existing_email = users.find_one({"email": email})
     if existing_email:
         return jsonify({"message": "Email already exists! Please provide another email"}), 409
