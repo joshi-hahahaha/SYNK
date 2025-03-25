@@ -14,10 +14,14 @@ type Btn = {
 };
 
 const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
+  const handleClick = () => {
+    console.log(btn.type);
+  };
+
   return (
     <motion.button
       key={index}
-      className={`absolute bottom-2 w-16 h-16 rounded-full flex items-center justify-center text-white text-lg shadow-lg glass ${btn.color} z-[1100]`}
+      className={`absolute bottom-2 w-16 h-16 rounded-full flex items-center justify-center text-white text-lg shadow-lg glass ${btn.color} z-[1100] hover:cursor-pointer`}
       initial={{ opacity: 0, scale: 0 }}
       animate={{
         opacity: 1,
@@ -27,6 +31,7 @@ const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
       }}
       exit={{ opacity: 0, scale: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      onClick={handleClick}
     >
       {btn.icon}
     </motion.button>

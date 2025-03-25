@@ -9,10 +9,6 @@ const Map = dynamic(() => import("@/components/Map"), {
   ssr: false,
 });
 
-// const ButtonMenu = dynamic(() => import("@/components/button/ButtonMenu"), {
-//   ssr: false,
-// });
-
 export default function Home() {
   return (
     <div className="w-screen h-screen relative">

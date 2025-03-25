@@ -15,15 +15,15 @@ export default function ButtonMenu() {
       icon: <FaSpinner />,
       color: "bg-green-400",
       angle: -60,
-      type: "Refresh",
+      type: "refresh",
     },
     {
       icon: <FaCalendar />,
       color: "bg-teal-400",
       angle: -120,
-      type: "Events",
+      type: "events",
     },
-    { icon: <FaCog />, color: "bg-blue-400", angle: 180, type: "Settings" },
+    { icon: <FaCog />, color: "bg-blue-400", angle: 180, type: "settings" },
   ];
 
   return (
