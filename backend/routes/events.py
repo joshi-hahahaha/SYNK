@@ -49,9 +49,8 @@ def nearby_events(events):
         {
             "$geoNear": {
                 "near": { "type": "Point", "coordinates": [longitude, latitude] },
-                "distanceField": "dist.calculated",  # Field to store the calculated distance
-                "maxDistance": 5000,  # Maximum distance (in meters, 5km)
-                "spherical": True  # Use spherical geometry (Haversine formula)
+                "maxDistance": 5000,  # Maximum distance (in meters)
+                "spherical": True
             }
         }
     ])
