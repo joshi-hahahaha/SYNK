@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 interface AuthContextType {
   isLogin: boolean;
@@ -8,12 +8,55 @@ interface AuthContextType {
   openLoginModal: () => void;
   openRegisterModal: () => void;
   toggleIsLogin: () => void;
+  isAuthenticated: boolean;
+  userId: string | null;
+  token: string | null;
+  login: (token: string, userId: string) => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLogin, setIsLogin] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+
+  // Initialize auth state from localStorage
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    const storedUserId = localStorage.getItem("userId");
+    if (storedToken && storedUserId) {
+      setIsAuthenticated(true);
+      setToken(storedToken);
+      setUserId(storedUserId);
+    }
+  }, []);
+
+  const login = (newToken: string, newUserId: string) => {
+    localStorage.setItem("token", newToken);
+    localStorage.setItem("userId", newUserId);
+    setIsAuthenticated(true);
+    setToken(newToken);
+    setUserId(newUserId);
+    console.log(isAuthenticated);
+    (
+      document.getElementById("auth_modal") as HTMLDialogElement | null
+    )?.close();
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    setIsAuthenticated(false);
+    setToken(null);
+    setUserId(null);
+    console.log(isAuthenticated);
+    (
+      document.getElementById("settings_modal") as HTMLDialogElement | null
+    )?.close();
+  };
 
   const openLoginModal = () => {
     setIsLogin(true);
@@ -30,7 +73,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const toggleIsLogin = () => {
-    setIsLogin((prev) => !prev); // Toggle the value of isLogin
+    setIsLogin((prev) => !prev);
   };
 
   return (
@@ -41,6 +84,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         openLoginModal,
         openRegisterModal,
         toggleIsLogin,
+        isAuthenticated,
+        userId,
+        token,
+        login,
+        logout,
       }}
     >
       {children}

@@ -34,7 +34,7 @@ def login(db, secret_key: str):
 
     token = create_token(str(valid_user.get("_id")), secret_key)
     return jsonify({
-        "user_id": str(valid_user.get('_id')),
+        "userId": str(valid_user.get('_id')),
         "token": token,
         "message": "user login successful",
     }), 200
@@ -73,7 +73,7 @@ def register(db, secret_key: str):
     token = create_token(str(user.get("_id")), secret_key)
 
     return jsonify({
-        "user_id": str(result.inserted_id),
+        "userId": str(result.inserted_id),
         "token": token,
         "message": "user registered successfully"
     }), 201

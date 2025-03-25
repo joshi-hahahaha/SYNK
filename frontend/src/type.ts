@@ -20,5 +20,5 @@ export type EventObj = {
 export type AuthRes = {
   message: string;
   token: string;
-  userid: string;
+  userId: string;
 };

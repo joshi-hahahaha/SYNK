@@ -6,7 +6,7 @@ import { URL_BASE } from "@/constants";
 import { AuthError } from "../error/AuthError";
 
 function AuthModal() {
-  const { isLogin, toggleIsLogin } = useAuth();
+  const { isLogin, toggleIsLogin, login } = useAuth();
   const [error, setError] = useState<string | null>(null);
 
   const [data, setData] = useState<AuthData>({
@@ -58,10 +58,7 @@ function AuthModal() {
       console.log(result);
 
       if (response.ok) {
-        (
-          document.getElementById("auth_modal") as HTMLDialogElement | null
-        )?.close();
-        localStorage.setItem("token", result.token);
+        login(result.token, result.userId);
       } else {
         setError(result.message || "An error occurred");
       }
