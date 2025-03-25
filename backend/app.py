@@ -53,9 +53,9 @@ def post_event():
 
 @app.route("/events", methods=["GET"])
 def get_events():
-    latitude = request.args.get('latitude')
-    longitude = request.args.get('longitude')
-    return events.nearby_events(events_collection)
+    latitude = request.args.get('latitude', type=float)
+    longitude = request.args.get('longitude', type=float)
+    return events.nearby_events(events_collection, latitude, longitude)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
