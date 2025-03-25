@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {Icon} from "leaflet";
+import { EventObj } from "@/type";
 
 const RecenterMap = ({ center }: { center: [number, number] }) => {
   const map = useMap();
@@ -30,31 +31,31 @@ const eventIcon = new Icon({
 
 const Map = () => {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  // const [events, setEvents] = useState(<Event[]>([])
-  const events = [
-    {
-      id: 1,
-      ownerId: 1,
-      name: "Event 1",
-      latitude: -33.844738,
-      longitude: 151.212191,
-      description: "This is event 1",
-      isPublic: true,
-      start: "2021-09-01T10:00:00",
-      end: "2021-09-01T12:00:00"
-    },
-    {
-      id: 2,
-      ownerId: 2,
-      name: "Event 2",
-      latitude: -33.883756,
-      longitude: 151.182324,
-      description: "This is event 2",
-      isPublic: true,
-      start: "2021-09-01T10:00:00",
-      end: "2021-09-01T12:00:00"
-    }
-  ]
+  const [events, setEvents] = useState<EventObj[]>([]);
+  // const events = [
+  //   {
+  //     id: 1,
+  //     ownerId: 1,
+  //     name: "Event 1",
+  //     latitude: -33.844738,
+  //     longitude: 151.212191,
+  //     description: "This is event 1",
+  //     isPublic: true,
+  //     start: "2021-09-01T10:00:00",
+  //     end: "2021-09-01T12:00:00"
+  //   },
+  //   {
+  //     id: 2,
+  //     ownerId: 2,
+  //     name: "Event 2",
+  //     latitude: -33.883756,
+  //     longitude: 151.182324,
+  //     description: "This is event 2",
+  //     isPublic: true,
+  //     start: "2021-09-01T10:00:00",
+  //     end: "2021-09-01T12:00:00"
+  //   }
+  // ]
 
   const successCallback = (position: GeolocationPosition) => {
     setUserLocation([position.coords.latitude, position.coords.longitude]);
@@ -68,20 +69,24 @@ const Map = () => {
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     const response = await fetch("URL")
-  //     if (!response.ok) {
-  //       console.log("error")
-  //       return
-  //     }
-  //     const json = await response.json()
-  //     for (const event of json) {
-  //       setEvents([...events, event])
-  //     }
-  //   }
-  //   getData()
-  // }, [events])
+  useEffect(() => {
+    const getData = async () => {
+      const latitude = userLocation ? userLocation[0] : 0
+      const longitude = userLocation ? userLocation[1] : 0
+      const response = await fetch(`http://localhost:5000/events?latitude=${latitude}&longitude=${longitude}`)
+      if (!response.ok) {
+        console.log("error")
+        return
+      } else {
+        console.log(response)
+      }
+      const json = await response.json()
+      for (const event of json) {
+        setEvents([...events, event])
+      }
+    }
+    getData()
+  }, [events, userLocation])
 
   return (
     <div className="h-screen w-screen">
