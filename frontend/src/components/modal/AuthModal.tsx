@@ -52,6 +52,9 @@ function AuthModal() {
 
       if (response.ok) {
         console.log("Success:", result);
+        (
+          document.getElementById("auth_modal") as HTMLDialogElement | null
+        )?.close();
         // You can add success handling like redirecting or closing the modal
       } else {
         console.error("Error:", result);
