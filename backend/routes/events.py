@@ -38,11 +38,7 @@ def add_event(events):
                     "eventId" : event_id
                     }), 200
 
-def nearby_events(events):
-    data = request.json
-    longitude = data["longitude"]
-    latitude = data["latitude"]
-
+def nearby_events(events, latitude, longitude):
     nearby = events.aggregate([
         {
             "$geoNear": {
