@@ -22,10 +22,11 @@ function AuthModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", data);
 
     const endpoint = isLogin ? "/auth/login" : "/auth/register";
     const url = `https://synk-e81v.onrender.com${endpoint}`;
+
+    console.log(`HERE ${isLogin}`);
 
     const body = isLogin
       ? { email: data.email, password: data.password }
@@ -34,6 +35,8 @@ function AuthModal() {
           email: data.email,
           password: data.password,
         };
+
+    console.log(body);
 
     try {
       const response = await fetch(url, {
