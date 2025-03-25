@@ -73,20 +73,22 @@ const Map = () => {
     const getData = async () => {
       const latitude = userLocation ? userLocation[0] : 0
       const longitude = userLocation ? userLocation[1] : 0
-      const response = await fetch(`http://localhost:5000/events?latitude=${latitude}&longitude=${longitude}`)
-      if (!response.ok) {
-        console.log("error")
-        return
-      } else {
-        console.log(response)
+      try {
+        const response = await fetch(`http://localhost:5000/events?latitude=${latitude}&longitude=${longitude}`)
+        if (!response.ok) {
+          console.log("error")
+          return
+        }
+        const json = await response.json()
+        setEvents(json)
+        console.log(json)
       }
-      const json = await response.json()
-      for (const event of json) {
-        setEvents([...events, event])
+      catch (error) {
+        console.log(error)
       }
     }
     getData()
-  }, [events, userLocation])
+  }, [userLocation])
 
   return (
     <div className="h-screen w-screen">
