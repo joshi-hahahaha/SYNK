@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { AuthData } from "@/type";
+import { AuthData, AuthRes } from "@/type";
 // import { LOCAL_URL_BASE } from "@/constants";
 import { URL_BASE } from "@/constants";
 import { AuthError } from "../error/AuthError";
@@ -54,13 +54,14 @@ function AuthModal() {
         body: JSON.stringify(body),
       });
 
-      const result = await response.json();
+      const result: AuthRes = await response.json();
+      console.log(result);
 
       if (response.ok) {
         (
           document.getElementById("auth_modal") as HTMLDialogElement | null
         )?.close();
-        // You can add success handling like redirecting or closing the modal
+        localStorage.setItem("token", result.token);
       } else {
         setError(result.message || "An error occurred");
       }

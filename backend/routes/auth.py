@@ -10,7 +10,7 @@ import datetime
 
 from helpers import check_register_data, create_token, hash_password, verify_password, verify_token
 
-def login(db, secret_key):
+def login(db, secret_key: str):
     data = request.json
     
     if not data:
@@ -40,7 +40,7 @@ def login(db, secret_key):
     }), 200
 
 
-def register(db):
+def register(db, secret_key: str):
     data = request.json
     if not data:
         return jsonify({"error": "no data provided"}), 400
@@ -63,10 +63,18 @@ def register(db):
         "hashed_password": hash_password(password),
     }
 
+    # Insert into db
     result = db.users.insert_one(user_document)
+    
+    # Immediately take user from db for generated ObjectId
+    user = db.users.find_one({"email": email})
+    
+    # AUTOMATICALLY LOG USER IN
+    token = create_token(str(user.get("_id")), secret_key)
 
     return jsonify({
         "user_id": str(result.inserted_id),
+        "token": token,
         "message": "user registered successfully"
     }), 201
 
