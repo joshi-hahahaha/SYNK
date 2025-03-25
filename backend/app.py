@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from helpers import generate_secret_key
 from routes import auth, user, events
 
 #-----------------------------------------------------------------------------#
@@ -18,11 +19,18 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 client = MongoClient(MONGO_URI)
 
+generate_secret_key()
+load_dotenv()
+
 db = client["synk-db"]
 
 users_collection = db["users"]
 events_collection = db["events"]
 events_collection.create_index([("location", "2dsphere")])
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+blacklist = db.blacklist
 
 print("DEBUG")
 users = users_collection.find()
@@ -34,9 +42,9 @@ for user in users:
 #-----------------------------------------------------------------------------#
 #-------------------------------- AUTH ROUTES --------------------------------#
 #-----------------------------------------------------------------------------#
-@app.route("/auth/login", methods=["GET"])
+@app.route("/auth/login", methods=["POST"])
 def login():
-    return auth.login(users)
+    return auth.login(db, SECRET_KEY)
 
 @app.route("/auth/register", methods=["POST"])
 def register():
@@ -48,16 +56,21 @@ def logout():
 
 @app.route("/user/update", methods=["PUT"])
 def user_update():
-    return user.user_update(users, db)
+    return user.user_update(users_collection, db)
 
 @app.route("/user/details", methods=["GET"])
 def user_details():
-    return user.user_details(users, db)
+    return user.user_details(users_collection, db)
 
 @app.route("/events", methods=["POST"])
 def post_event():
-    return events.add_event(events)
+    return events.add_event(events_collection)
 
+@app.route("/events", methods=["GET"])
+def get_events():
+    latitude = request.args.get('latitude')
+    longitude = request.args.get('longitude')
+    return events.nearby_events(events_collection)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
