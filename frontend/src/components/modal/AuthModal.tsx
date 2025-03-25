@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { AuthData } from "@/type";
-import { LOCAL_URL_BASE } from "@/constants";
-// import { URL_BASE } from "@/constants";
+import { URL_BASE } from "@/constants";
 
 function AuthModal() {
   const { isLogin, toggleIsLogin } = useAuth();
@@ -26,9 +25,7 @@ function AuthModal() {
     e.preventDefault();
 
     const endpoint = isLogin ? "/auth/login" : "/auth/register";
-    const url = `${LOCAL_URL_BASE}${endpoint}`;
-
-    console.log(`HERE ${isLogin}`);
+    const url = `${URL_BASE}${endpoint}`;
 
     const body = isLogin
       ? { email: data.email, password: data.password }
