@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  /* themes: wireframe --default, business --prefersdark; */
   themes: all;
 }
 

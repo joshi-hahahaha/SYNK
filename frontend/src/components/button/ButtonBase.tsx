@@ -17,7 +17,7 @@ const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
   return (
     <motion.button
       key={index}
-      className={`absolute bottom-2 w-16 h-16 rounded-full flex items-center justify-center text-white text-lg shadow-lg ${btn.color} z-[1100]`}
+      className={`absolute bottom-2 w-16 h-16 rounded-full flex items-center justify-center text-white text-lg shadow-lg glass ${btn.color} z-[1100]`}
       initial={{ opacity: 0, scale: 0 }}
       animate={{
         opacity: 1,
