@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {Icon} from "leaflet";
 import { EventObj } from "@/type";
+import { URL_BASE } from "@/constants";
 
 const RecenterMap = ({ center }: { center: [number, number] }) => {
   const map = useMap();
@@ -74,7 +75,7 @@ const Map = () => {
       const latitude = userLocation ? userLocation[0] : 0
       const longitude = userLocation ? userLocation[1] : 0
       try {
-        const response = await fetch(`http://localhost:5000/events?latitude=${latitude}&longitude=${longitude}`)
+        const response = await fetch(`${URL_BASE}/events?latitude=${latitude}&longitude=${longitude}`)
         if (!response.ok) {
           console.log("error")
           return
