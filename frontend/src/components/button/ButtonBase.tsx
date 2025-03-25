@@ -16,13 +16,19 @@ type Btn = {
 const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
   const handleClick = () => {
     if (btn.type === "search") {
-      document.getElementById("search_modal").showModal();
+      (
+        document.getElementById("search_modal") as HTMLDialogElement | null
+      )?.showModal();
     } else if (btn.type === "refresh") {
       console.log(btn.type);
     } else if (btn.type === "settings") {
-      document.getElementById("settings_modal").showModal();
+      (
+        document.getElementById("settings_modal") as HTMLDialogElement | null
+      )?.showModal();
     } else if (btn.type === "events") {
-      document.getElementById("events_modal").showModal();
+      (
+        document.getElementById("events_modal") as HTMLDialogElement | null
+      )?.showModal();
     }
   };
 
