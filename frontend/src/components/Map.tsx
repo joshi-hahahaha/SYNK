@@ -6,14 +6,16 @@ import { Icon } from "leaflet";
 import { EventObj } from "@/type";
 import { URL_BASE } from "@/constants";
 
-const RecenterMap = ({ center }: { center: [number, number] }) => {
+const Recentre = ({location}: {location: [number, number]}) => {
   const map = useMap();
-  useEffect(() => {
-    map.flyTo(center, 13);
-  }, [center, map]);
-
-  return null;
-};
+  return (
+    <button
+      className="absolute bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg z-1000 cursor-pointer"
+      onClick={() => map.flyTo(location, 13)}>
+      Recentre
+    </button>
+  )
+}
 
 const markerUserIcon = new Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -70,30 +72,24 @@ const Map = () => {
 
   return (
     <div className="h-screen w-screen relative">
-      {userLocation &&
-        <button
-        className="absolute bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg z-1000 cursor-pointer"
-        onClick={() => setUserLocation([...userLocation])}>
-        Recentre</button>
-      }
       {userLocation ? (
         <MapContainer center={userLocation} zoom={13} className="h-full w-full">
-        <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <Marker position={userLocation} icon={markerUserIcon}>
-        <Popup>{"You are here!"}</Popup>
-        </Marker>
-        <RecenterMap center={userLocation} />
-        {events.map((event) => (
-          <Marker key={event.id} position={[event.latitude, event.longitude]} icon={eventIcon}>
-            <Popup>
-              <h2><b>{event.name}</b></h2>
-              <p>{event.description}</p>
-              <i>{event.isPublic ? "Open" : "Closed"}</i></Popup>
+          <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <Recentre location={userLocation} />
+          <Marker position={userLocation} icon={markerUserIcon}>
+          <Popup>{"You are here!"}</Popup>
           </Marker>
-          ))}
+          {events.map((event) => (
+            <Marker key={event.id} position={[event.latitude, event.longitude]} icon={eventIcon}>
+              <Popup>
+                <h2><b>{event.name}</b></h2>
+                <p>{event.description}</p>
+                <i>{event.isPublic ? "Open" : "Closed"}</i></Popup>
+            </Marker>
+            ))}
         </MapContainer>
       ) : (
         <p className="text-center mt-10">Fetching location...</p>
