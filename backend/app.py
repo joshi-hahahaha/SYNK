@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from helpers import generate_secret_key
 from routes import auth, user, events
 
 #-----------------------------------------------------------------------------#
@@ -18,11 +19,18 @@ MONGO_URI = os.getenv("MONGO_URI")
 
 client = MongoClient(MONGO_URI)
 
+generate_secret_key()
+load_dotenv()
+
 db = client["synk-db"]
 
 users_collection = db["users"]
 events_collection = db["events"]
 events_collection.create_index([("location", "2dsphere")])
+
+SECRET_KEY = os.getenv('SECRET_KEY')
+
+blacklist = db.blacklist
 
 print("DEBUG")
 users = users_collection.find()
@@ -36,7 +44,7 @@ for user in users:
 #-----------------------------------------------------------------------------#
 @app.route("/auth/login", methods=["GET"])
 def login():
-    return auth.login(users)
+    return auth.login(db)
 
 @app.route("/auth/register", methods=["POST"])
 def register():

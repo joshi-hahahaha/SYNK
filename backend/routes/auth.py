@@ -8,25 +8,40 @@ import re
 import jwt
 import datetime
 
-from helpers import hash_password
+from helpers import create_token, hash_password, verify_password, verify_token
 
-def login(users):
+def login(db, secret_key):
     data = request.json
-    username = data.get("username")
+    
+    if not data:
+        return jsonify({"error": "no data provided"}), 400
+    
+    email = data.get("email")
     password = data.get("password")
-    password = hashlib.sha256(password.encode()).hexdigest()
+    
+    if not email or not password:
+        return jsonify({"error": "missing required fields"}), 400
+    
+    valid_user = db.users.find_one({"email": email})
+    
+    if not valid_user:
+        return jsonify({"error": "invalid email or password"}), 401
 
-    user = users.find_one({"username": username})
+    valid_password = verify_password(password, valid_user.get("hashed_password"))
+    if not valid_password:
+        return jsonify({"error": "invalid email or password"}), 401
 
-    if not user:
-        return jsonify({"message": "User not found"}), 404
+    is_confirmed = valid_user.get("is_confirmed")
+    if not is_confirmed:
+        return jsonify({"error": "account has not yet been confirmed"}), 403
 
-    if user.get("password") != password:
-        return jsonify({"message": "Incorrect Password"}), 400
+    token = create_token(str(valid_user.get("_id")), secret_key)
 
     return jsonify({
-        "message": "Successfully logged in",
-        "token": None
+        "user_id": str(valid_user.get('_id')),
+        "token": token,
+        "message": "user login successful",
+        "role": valid_user.get("role"),
     }), 200
 
 
@@ -124,12 +139,22 @@ def register(db):
     # }), 201
 
 
-def logout():
-    token = request.headers.get("Authorization")
-    if not token:
-        return jsonify({"message": "Token is missing"}), 400
-    
-    token_blacklist.add(token)
-    
-    return jsonify({"message: Successfully logged out"}), 200   
+def logout(secret_key, blacklist):
+    # Extract token from Authorization Header
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        token = auth_header.split(" ")[1]
+    else:
+        return jsonify({"error": "token is missing"}), 401
+
+    # check if valid is invalid
+    if verify_token(token, secret_key) is None:
+        return jsonify({"error": "invalid token"}), 401
+
+    # check if token is blacklisted
+    if blacklist.find_one({"token": token}) is not None:
+        return jsonify({"error": "invalid token"}), 401
+
+    blacklist.insert_one({"token": token})
+    return jsonify({"message": "Logged out successfully"}), 200 
 
