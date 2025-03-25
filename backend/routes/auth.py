@@ -50,7 +50,6 @@ def register(db):
         "name": username,
         "email": email,
         "hashed_password": hash_password(password),
-        "is_confirmed": False
     }
     
     result = db.users.insert_one(user_document)
