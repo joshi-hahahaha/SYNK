@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { AuthData } from "@/type";
+import { URL_BASE } from "@/constants";
 
 function AuthModal() {
   const { isLogin, toggleIsLogin } = useAuth();
@@ -22,10 +23,11 @@ function AuthModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", data);
 
-    const endpoint = isLogin ? "/login" : "/register";
-    const url = `https://synk-e81v.onrender.com${endpoint}`;
+    const endpoint = isLogin ? "/auth/login" : "/auth/register";
+    const url = `${URL_BASE}${endpoint}`;
+
+    console.log(`HERE ${isLogin}`);
 
     const body = isLogin
       ? { email: data.email, password: data.password }
@@ -34,6 +36,8 @@ function AuthModal() {
           email: data.email,
           password: data.password,
         };
+
+    console.log(body);
 
     try {
       const response = await fetch(url, {
@@ -48,6 +52,9 @@ function AuthModal() {
 
       if (response.ok) {
         console.log("Success:", result);
+        (
+          document.getElementById("auth_modal") as HTMLDialogElement | null
+        )?.close();
         // You can add success handling like redirecting or closing the modal
       } else {
         console.error("Error:", result);
