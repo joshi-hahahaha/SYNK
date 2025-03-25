@@ -44,7 +44,7 @@ for user in users:
 #-----------------------------------------------------------------------------#
 @app.route("/auth/login", methods=["POST"])
 def login():
-    return auth.login(db)
+    return auth.login(db, SECRET_KEY)
 
 @app.route("/auth/register", methods=["POST"])
 def register():

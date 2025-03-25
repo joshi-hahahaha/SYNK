@@ -36,6 +36,8 @@ def login(db, secret_key):
         return jsonify({"error": "account has not yet been confirmed"}), 403
 
     token = create_token(str(valid_user.get("_id")), secret_key)
+    
+    print(token)
 
     return jsonify({
         "user_id": str(valid_user.get('_id')),
