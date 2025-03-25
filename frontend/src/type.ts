@@ -5,7 +5,7 @@ export type AuthData = {
   confirmPassword?: string;
 };
 
-export type Event = {
+export type EventObj = {
   id: string;
   ownerId: string;
   name: string;

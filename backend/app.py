@@ -56,16 +56,21 @@ def logout():
 
 @app.route("/user/update", methods=["PUT"])
 def user_update():
-    return user.user_update(users, db)
+    return user.user_update(users_collection, db)
 
 @app.route("/user/details", methods=["GET"])
 def user_details():
-    return user.user_details(users, db)
+    return user.user_details(users_collection, db)
 
 @app.route("/events", methods=["POST"])
 def post_event():
-    return events.add_event(events)
+    return events.add_event(events_collection)
 
+@app.route("/events", methods=["GET"])
+def get_events():
+    latitude = request.args.get('latitude')
+    longitude = request.args.get('longitude')
+    return events.nearby_events(events_collection)
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
