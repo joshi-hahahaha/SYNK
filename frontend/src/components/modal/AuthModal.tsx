@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { AuthData } from "@/type";
 import { URL_BASE } from "@/constants";
+import { AuthError } from "../error/AuthError";
 
 function AuthModal() {
   const { isLogin, toggleIsLogin } = useAuth();
+  const [error, setError] = useState<string | null>(null);
 
   const [data, setData] = useState<AuthData>({
     email: "",
@@ -23,6 +25,12 @@ function AuthModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    if (!isLogin && data.password !== data.confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
 
     const endpoint = isLogin ? "/auth/login" : "/auth/register";
     const url = `${URL_BASE}${endpoint}`;
@@ -34,8 +42,6 @@ function AuthModal() {
           email: data.email,
           password: data.password,
         };
-
-    console.log(body);
 
     try {
       const response = await fetch(url, {
@@ -49,18 +55,16 @@ function AuthModal() {
       const result = await response.json();
 
       if (response.ok) {
-        console.log("Success:", result);
         (
           document.getElementById("auth_modal") as HTMLDialogElement | null
         )?.close();
         // You can add success handling like redirecting or closing the modal
       } else {
-        console.error("Error:", result);
-        // Handle errors (e.g., display error message)
+        setError(result.message || "An error occurred");
       }
     } catch (error) {
+      setError("Network error - please try again");
       console.error("Network error:", error);
-      // Handle network errors (e.g., show error message to the user)
     }
   };
 
@@ -139,6 +143,7 @@ function AuthModal() {
               />
             </div>
           )}
+          <AuthError error={error} onClose={() => setError(null)} />
           <p className="py-1">
             {isLogin ? (
               <>
