@@ -14,10 +14,28 @@ type Btn = {
 };
 
 const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
+  const handleClick = () => {
+    if (btn.type === "search") {
+      (
+        document.getElementById("search_modal") as HTMLDialogElement | null
+      )?.showModal();
+    } else if (btn.type === "refresh") {
+      console.log(btn.type);
+    } else if (btn.type === "settings") {
+      (
+        document.getElementById("settings_modal") as HTMLDialogElement | null
+      )?.showModal();
+    } else if (btn.type === "events") {
+      (
+        document.getElementById("events_modal") as HTMLDialogElement | null
+      )?.showModal();
+    }
+  };
+
   return (
     <motion.button
       key={index}
-      className={`absolute bottom-2 w-16 h-16 rounded-full flex items-center justify-center text-white text-lg shadow-lg glass ${btn.color} z-[1100]`}
+      className={`absolute bottom-2 w-16 h-16 rounded-full flex items-center justify-center text-white text-lg shadow-lg glass ${btn.color} z-[1100] hover:cursor-pointer`}
       initial={{ opacity: 0, scale: 0 }}
       animate={{
         opacity: 1,
@@ -27,6 +45,7 @@ const ButtonBase = ({ index, btn }: ButtonBaseProps) => {
       }}
       exit={{ opacity: 0, scale: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      onClick={handleClick}
     >
       {btn.icon}
     </motion.button>
