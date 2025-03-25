@@ -60,7 +60,7 @@ def user_update(users, db):
         }
     }), 200
 
-
+# Further Checking Required
 def user_details(user_id, db):
     users_collection = db["users"]
     user = users_collection.find_one({"_id": ObjectId(user_id)})
@@ -78,3 +78,6 @@ def user_details(user_id, db):
     }
 
     return jsonify({"user": user_details}), 200
+
+
+# Function user/detail (authenticated)
