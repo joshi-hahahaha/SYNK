@@ -39,21 +39,20 @@ def add_event(events):
                     }), 200
 
 def nearby_events(events, latitude, longitude):
-    nearby = events.aggregate([
-        {
-            "$geoNear": {
-                "near": {"type": "Point", "coordinates": [longitude, latitude]},
-                "distanceField": "dist.calculated",
-                "maxDistance": 5000,  # Specify max distance here
-                "spherical": True
-            }
-        }
-    ])
+    # nearby = events.aggregate([
+    #     {
+    #         "$geoNear": {
+    #             "near": {"type": "Point", "coordinates": [longitude, latitude]},
+    #             "distanceField": "dist.calculated",
+    #             "maxDistance": 5000,  # Specify max distance here
+    #             "spherical": True
+    #         }
+    #     }
+    # ])
 
     ret = []
     for e in events.find():
         e.pop('_id')
         ret.append(e)
 
-    # Nearby is a list of objects we can then return in json
     return jsonify(ret)
