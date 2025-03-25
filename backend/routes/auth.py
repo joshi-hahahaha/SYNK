@@ -27,6 +27,7 @@ def login(users):
         "token": None
     }), 200
 
+
 def register(users):
     data = request.json
     firstName = data.get("firstName")
@@ -37,7 +38,6 @@ def register(users):
     reconfirmPassword = data.get("reconfirmPassord")
 
     password = hashlib.sha256(password.encode()).hexdigest()
-
 
     invalid_character = re.compile(r"^.*[^a-zA-Z '-]")
 
@@ -72,6 +72,8 @@ def register(users):
     if existing_username:
         return jsonify({"message": "Username has been taken! Please enter a new username"}), 409
 
+
+    # email limitations
     existing_email = users.find_one({"email": email})
     if existing_email:
         return jsonify({"message": "Email already exists! Please provide another email"}), 409
@@ -98,3 +100,14 @@ def register(users):
         "message": "Successfully registered a profile",
         "token": token
     }), 201
+
+
+def logout():
+    token = request.headers.get("Authorization")
+    if not token:
+        return jsonify({"message": "Token is missing"}), 400
+    
+    token_blacklist.add(token)
+    
+    return jsonify({"message: Successfully logged out"}), 200   
+
