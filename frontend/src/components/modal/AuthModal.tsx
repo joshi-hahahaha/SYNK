@@ -3,9 +3,9 @@ import { useAuth } from "@/context/AuthContext";
 import { AuthData } from "@/type";
 
 function AuthModal() {
-  const { isLogin } = useAuth();
+  const { isLogin, toggleIsLogin } = useAuth();
 
-  const [formData, setFormData] = useState<AuthData>({
+  const [data, setData] = useState<AuthData>({
     email: "",
     password: "",
     username: "",
@@ -14,7 +14,7 @@ function AuthModal() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
+    setData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -22,7 +22,7 @@ function AuthModal() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+    console.log("Form submitted:", data);
     // Add your authentication logic here
   };
 
@@ -45,7 +45,7 @@ function AuthModal() {
                 name="username"
                 placeholder="Enter your username"
                 className="input input-bordered w-full"
-                value={formData.username}
+                value={data.username}
                 onChange={handleChange}
                 required={!isLogin}
               />
@@ -62,7 +62,7 @@ function AuthModal() {
               name="email"
               placeholder="Enter your email"
               className="input input-bordered w-full"
-              value={formData.email}
+              value={data.email}
               onChange={handleChange}
               required
             />
@@ -78,7 +78,7 @@ function AuthModal() {
               name="password"
               placeholder="Enter your password"
               className="input input-bordered w-full"
-              value={formData.password}
+              value={data.password}
               onChange={handleChange}
               required
             />
@@ -95,12 +95,35 @@ function AuthModal() {
                 name="confirmPassword"
                 placeholder="Confirm your password"
                 className="input input-bordered w-full"
-                value={formData.confirmPassword}
+                value={data.confirmPassword}
                 onChange={handleChange}
                 required={!isLogin}
               />
             </div>
           )}
+          <p className="py-1">
+            {isLogin ? (
+              <>
+                Need an account?{" "}
+                <span
+                  className="text-blue-500 cursor-pointer"
+                  onClick={toggleIsLogin}
+                >
+                  Register here!
+                </span>
+              </>
+            ) : (
+              <>
+                Already have an account?{" "}
+                <span
+                  className="text-blue-500 cursor-pointer"
+                  onClick={toggleIsLogin}
+                >
+                  Login here!
+                </span>
+              </>
+            )}
+          </p>
 
           <div className="modal-action">
             <button type="submit" className="btn btn-primary">

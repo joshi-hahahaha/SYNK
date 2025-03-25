@@ -7,6 +7,7 @@ interface AuthContextType {
   setIsLogin: (value: boolean) => void;
   openLoginModal: () => void;
   openRegisterModal: () => void;
+  toggleIsLogin: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,9 +29,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     )?.showModal();
   };
 
+  const toggleIsLogin = () => {
+    setIsLogin((prev) => !prev); // Toggle the value of isLogin
+  };
+
   return (
     <AuthContext.Provider
-      value={{ isLogin, setIsLogin, openLoginModal, openRegisterModal }}
+      value={{
+        isLogin,
+        setIsLogin,
+        openLoginModal,
+        openRegisterModal,
+        toggleIsLogin,
+      }}
     >
       {children}
     </AuthContext.Provider>
