@@ -1,18 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup  } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import {Icon} from "leaflet";
+import { Icon } from "leaflet";
 import { EventObj } from "@/type";
 import { URL_BASE } from "@/constants";
 
-// const RecenterMap = ({ center }: { center: [number, number] }) => {
-//   const map = useMap();
-//   useEffect(() => {
-//     map.setView(center);
-//   }, [center, map]);
-//   return null;
-// };
+const Recentre = ({location}: {location: [number, number]}) => {
+  const map = useMap();
+  return (
+    <button
+      className="absolute bottom-4 left-4 bg-blue-500 text-white px-4 py-2 rounded-lg z-1000 cursor-pointer"
+      onClick={() => map.flyTo(location, 13)}>
+      Recentre
+    </button>
+  )
+}
 
 const markerUserIcon = new Icon({
   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -41,7 +44,8 @@ const Map = () => {
   useEffect(() => {
     const watchId = navigator.geolocation.watchPosition(successCallback, null, {
       enableHighAccuracy: true,
-      maximumAge: 0,
+      maximumAge: 1000,
+      timeout: 1000,
     });
     return () => navigator.geolocation.clearWatch(watchId);
   }, []);
@@ -58,7 +62,6 @@ const Map = () => {
         }
         const json = await response.json()
         setEvents(json)
-        console.log(json)
       }
       catch (error) {
         console.log(error)
@@ -68,16 +71,16 @@ const Map = () => {
   }, [userLocation])
 
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen w-screen relative">
       {userLocation ? (
         <MapContainer center={userLocation} zoom={13} className="h-full w-full">
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {/* <RecenterMap center={userLocation} /> */}
+          <Recentre location={userLocation} />
           <Marker position={userLocation} icon={markerUserIcon}>
-            <Popup>{"You are here!"}</Popup>
+          <Popup>{"You are here!"}</Popup>
           </Marker>
           {events.map((event) => (
             <Marker key={event.id} position={[event.latitude, event.longitude]} icon={eventIcon}>
@@ -86,7 +89,7 @@ const Map = () => {
                 <p>{event.description}</p>
                 <i>{event.isPublic ? "Open" : "Closed"}</i></Popup>
             </Marker>
-          ))}
+            ))}
         </MapContainer>
       ) : (
         <p className="text-center mt-10">Fetching location...</p>
